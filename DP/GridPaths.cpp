@@ -27,6 +27,29 @@ ll dp[1001][1001];
 ll path[1001][1001];
 
 
+int rec(int i, int j)
+{
+    if (i < 0 || i >= n || j < 0 || j >= n || arr[i][j] == '*')
+    {
+        return 0;
+    }
+
+    if (i == 0 and j == 0)
+    {
+        return 1;
+    }
+
+    if (dp[i][j] != -1)
+    {
+        return path[i][j]%MOD;
+    }
+
+    path[i][j] = (rec(i - 1, j) + rec(i, j - 1))%MOD;
+    dp[i][j] = 1;
+    return path[i][j]%MOD;
+}
+
+
 int iter()
 {
     if (arr[0][0] == '*')
