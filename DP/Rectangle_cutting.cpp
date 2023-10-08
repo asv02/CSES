@@ -21,57 +21,50 @@ const ll MOD = 1000000007;
 #define output(arr, n) \
     loop(i, 0, n) { cout << arr[i] << " "; }
 
-int n;
-string arr[1001];
-ll dp[1001][1001];
-ll path[1001][1001];
+int n, x;
+int arr[1001];
+ll dp[1000003];
 
-
-int iter()
+int rec(int sum_left)
 {
-    if (arr[0][0] == '*')
+
+    if (sum_left == 0)
+    {
+        return 1;
+    }
+
+    if (sum_left < 0)
     {
         return 0;
     }
 
-    path[0][0] = 1;
+    if (dp[sum_left] != -1)
+    {
+        return (dp[sum_left] % MOD);
+    }
+
+    ll ans = 0;
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        if (arr[i] <= sum_left)
         {
-            if (i == 0 and j == 0)
-            {
-                continue;
-            }
-            if (arr[i][j] == '*')
-            {
-                path[i][j] = 0;
-            }
-            else if (i == 0 and j >= 1)
-            {
-                path[i][j] = path[i][j - 1]%MOD;
-            }
-            else if (j == 0 and i >= 1)
-            {
-                path[i][j] = path[i - 1][j]%MOD;
-            }
-            else if (i >= 1 and j >= 1)
-            {
-                path[i][j] = (path[i - 1][j] + path[i][j - 1])%MOD;
-            }
+            ans += rec(sum_left - arr[i]);
         }
     }
-    return (path[n - 1][n - 1])%MOD;
+    return dp[sum_left] = (ans % MOD);
 }
+
 void solve()
 {
-    cin >> n;
-    loop(i, 0, n)
-    {
-        cin >> arr[i];
-    }
-    cout << iter()%MOD << en;
+    cin >> n >> x;
+    input(arr, n);
 
+    for(int i=0;i<=x;i++)
+    {
+        dp[i]=-1;
+    }
+    cout << (rec(x)%MOD) << en;
+    // cout << iter() << en;
 }
 
 int main()

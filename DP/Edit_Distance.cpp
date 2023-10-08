@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -21,57 +20,43 @@ const ll MOD = 1000000007;
 #define output(arr, n) \
     loop(i, 0, n) { cout << arr[i] << " "; }
 
-int n;
-string arr[1001];
-ll dp[1001][1001];
-ll path[1001][1001];
+int n, x;
+int arr[1001];
+// int dp[100001][100001];
+string s1, s2;
 
+// gives TLE
+int rec() { return 1; }
 
-int iter()
+void solve()
 {
-    if (arr[0][0] == '*')
+    cin >> s1 >> s2;
+    int n1 = s1.length();
+    int n2 = s2.length();
+    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
+    for (int i = 1; i <= n1; i++)
     {
-        return 0;
+        dp[i][0] = i;
     }
-
-    path[0][0] = 1;
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i <= n2; i++)
     {
-        for (int j = 0; j < n; j++)
+        dp[0][i] = i;
+    }
+    for (int i = 1; i <= n1; i++)
+    {
+        for (int j = 1; j <= n2; j++)
         {
-            if (i == 0 and j == 0)
+            if (s1[i - 1] == s2[j - 1])
             {
-                continue;
+                dp[i][j] = dp[i - 1][j - 1];
             }
-            if (arr[i][j] == '*')
-            {
-                path[i][j] = 0;
-            }
-            else if (i == 0 and j >= 1)
-            {
-                path[i][j] = path[i][j - 1]%MOD;
-            }
-            else if (j == 0 and i >= 1)
-            {
-                path[i][j] = path[i - 1][j]%MOD;
-            }
-            else if (i >= 1 and j >= 1)
-            {
-                path[i][j] = (path[i - 1][j] + path[i][j - 1])%MOD;
+            else if (s1[i - 1] != s2[j - 1])
+            {                     //added          //replaced        //removed(this condition gives minimum when extra letter present )
+                dp[i][j] = 1 + min({dp[i][j - 1],  dp[i - 1][j - 1],dp[i-1][j]});
             }
         }
     }
-    return (path[n - 1][n - 1])%MOD;
-}
-void solve()
-{
-    cin >> n;
-    loop(i, 0, n)
-    {
-        cin >> arr[i];
-    }
-    cout << iter()%MOD << en;
-
+    cout<<dp[n1][n2]<<en;
 }
 
 int main()
